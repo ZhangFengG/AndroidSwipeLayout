@@ -69,9 +69,13 @@ public class SwipeLayout extends FrameLayout {
         Bottom
     }
 
+    /**
+     * 显示模式
+     * @description: Created by Boqin on 2017/1/16 15:24
+     */
     public enum ShowMode {
-        LayDown,
-        PullOut
+        LayDown, //平摊在底部
+        PullOut //拉拽
     }
 
     public SwipeLayout(Context context) {
@@ -113,6 +117,7 @@ public class SwipeLayout extends FrameLayout {
 
     }
 
+    /** 滑动接口 */
     public interface SwipeListener {
         void onStartOpen(SwipeLayout layout);
 
@@ -334,6 +339,7 @@ public class SwipeLayout extends FrameLayout {
 
         boolean isCloseBeforeDrag = true;
 
+        /** 手指释放的时候回调 */
         @Override
         public void onViewReleased(View releasedChild, float xvel, float yvel) {
             super.onViewReleased(releasedChild, xvel, yvel);
@@ -345,6 +351,7 @@ public class SwipeLayout extends FrameLayout {
             invalidate();
         }
 
+        /** 最后的动画入口 */
         @Override
         public void onViewPositionChanged(View changedView, int left, int top, int dx, int dy) {
             View surfaceView = getSurfaceView();
@@ -712,6 +719,7 @@ public class SwipeLayout extends FrameLayout {
         addDrag(dragEdge, child, null);
     }
 
+    /** 设置对应滑动方向上显示的View视图 */
     public void addDrag(DragEdge dragEdge, View child, ViewGroup.LayoutParams params) {
         if (child == null) return;
 
@@ -751,7 +759,7 @@ public class SwipeLayout extends FrameLayout {
         } catch (Exception e) {
             e.printStackTrace();
         }
-
+        /** 设置对应滑动方向上显示的View视图，最终映射到Map表中*/
         if (gravity > 0) {
             gravity = GravityCompat.getAbsoluteGravity(gravity, ViewCompat.getLayoutDirection(this));
 
@@ -790,7 +798,7 @@ public class SwipeLayout extends FrameLayout {
             mOnLayoutListeners.get(i).onLayout(this);
         }
     }
-
+    /** 界面布局相关 */
     void layoutPullOut() {
         View surfaceView = getSurfaceView();
         Rect surfaceRect = mViewBoundCache.get(surfaceView);
@@ -1631,7 +1639,7 @@ public class SwipeLayout extends FrameLayout {
         mCurrentDragEdge = dragEdge;
         updateBottomViews();
     }
-
+    /** 更新视图的布局 */
     private void updateBottomViews() {
         View currentBottomView = getCurrentBottomView();
         if (currentBottomView != null) {
