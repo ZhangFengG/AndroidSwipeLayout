@@ -15,5 +15,18 @@
         android:title="RecyclerView" />
     <item
         android:id="@+id/action_nested"
-        android:title="Complicate" />
+        android:title="Complicate"/>
+    <group android:id="@+id/action_intercept"
+        android:checkableBehavior="single">
+        <item
+            android:id="@+id/action_intercept_true"
+            android:title="InterceptTrue"/>
+        <item
+            android:id="@+id/action_intercept_false"
+            android:title="InterceptFalse"/>
+        <item
+            android:id="@+id/action_intercept_normal"
+            android:title="InterceptNormal"/>
+    </group>
+
 </menu>

@@ -183,6 +183,15 @@ public class MyActivity extends Activity {
             return true;
         } else if (id == R.id.action_recycler) {
             startActivity(new Intent(this, RecyclerViewExample.class));
+        } else if (id == R.id.action_intercept_true) {
+            SwipeLayout.setForceInterceptTouchEvent(true);
+            item.setChecked(true);
+        } else if (id == R.id.action_intercept_false) {
+            SwipeLayout.setForceInterceptTouchEvent(false);
+            item.setChecked(true);
+        } else if (id == R.id.action_intercept_normal){
+            SwipeLayout.setForceAbleInterceptTouchEvent(false);
+            item.setChecked(true);
         }
         return super.onOptionsItemSelected(item);
     }

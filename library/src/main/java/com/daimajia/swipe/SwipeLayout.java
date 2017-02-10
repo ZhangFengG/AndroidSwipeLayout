@@ -30,6 +30,10 @@ import android.widget.AdapterView;
 import android.widget.FrameLayout;
 
 public class SwipeLayout extends FrameLayout {
+
+    private static boolean mForceIntercept;
+    private static boolean mForceInterceptAble;
+
     @Deprecated
     public static final int EMPTY_LAYOUT = -1;
     private static final int DRAG_LEFT = 1;
@@ -90,10 +94,10 @@ public class SwipeLayout extends FrameLayout {
                     surfaceView.offsetLeftAndRight(dx);
                     surfaceView.offsetTopAndBottom(dy);
                 } else {
-//                    Rect rect = computeBottomLayDown(mCurrentDragEdge);
-//                    if (currentBottomView != null) {
-//                        currentBottomView.layout(rect.left, rect.top, rect.right, rect.bottom);
-//                    }
+                    Rect rect = computeBottomLayDown(mCurrentDragEdge);
+                    if (currentBottomView != null) {
+                        currentBottomView.layout(rect.left, rect.top, rect.right, rect.bottom);
+                    }
 
                     int newLeft = surfaceView.getLeft() + dx, newTop = surfaceView.getTop() + dy;
 
@@ -110,19 +114,17 @@ public class SwipeLayout extends FrameLayout {
                     //更新前景View的布局位置
                     surfaceView.layout(newLeft, newTop, newLeft + getMeasuredWidth(), newTop + getMeasuredHeight());
                 }
-//                surfaceView.offsetLeftAndRight(dx);
-//                surfaceView.offsetTopAndBottom(dy);
+                surfaceView.offsetLeftAndRight(dx);
+                surfaceView.offsetTopAndBottom(dy);
             }
 
             dispatchRevealEvent(evLeft, evTop, evRight, evBottom);
 
             dispatchSwipeEvent(evLeft, evTop, dx, dy);
 
-            Log.d("layoutPullOut", "onViewPositionChanged");
+            invalidate();
 
-//            invalidate();
-
-//            captureChildrenBound();
+            captureChildrenBound();
         }
 
         // 手指释放的时候回调
@@ -328,14 +330,20 @@ public class SwipeLayout extends FrameLayout {
 
     @Override
     public boolean onInterceptTouchEvent(MotionEvent ev) {
+        if(mForceInterceptAble){
+            return mForceIntercept;
+        }
         if (!isSwipeEnabled()) {
+            Log.d("onInterceptTouchEvent", this+":isSwipeEnabled:"+false);
             return false;
         }
         if (mClickToClose && getOpenStatus() == Status.Open && isTouchOnSurface(ev)) {
+            Log.d("onInterceptTouchEvent", this+":Open:"+true);
             return true;
         }
         for (SwipeDenier denier : mSwipeDeniers) {
             if (denier != null && denier.shouldDenySwipe(ev)) {
+                Log.d("onInterceptTouchEvent", this+":shouldDenySwipe:"+false);
                 return false;
             }
         }
@@ -362,6 +370,7 @@ public class SwipeLayout extends FrameLayout {
                 if (!beforeCheck && mIsBeingDragged) {
                     //let children has one chance to catch the touch, and request the swipe not intercept
                     //useful when swipeLayout wrap a swipeLayout or other gestural layout
+                    Log.d("onInterceptTouchEvent", this+":ACTION_MOVE:"+false);
                     return false;
                 }
                 break;
@@ -374,7 +383,9 @@ public class SwipeLayout extends FrameLayout {
             default://handle other action, such as ACTION_POINTER_DOWN/UP
                 mDragHelper.processTouchEvent(ev);
         }
+        Log.d("onInterceptTouchEvent", this+":MotionEvent:"+mIsBeingDragged);
         return mIsBeingDragged;
+//        return false;
     }
 
     @Override
@@ -488,8 +499,9 @@ public class SwipeLayout extends FrameLayout {
             default://handle other action, such as ACTION_POINTER_DOWN/UP
                 mDragHelper.processTouchEvent(event);
         }
-
+        Log.d("onInterceptTouchEvent", this+":onTouchEvent:"+mIsBeingDragged);
         return super.onTouchEvent(event) || mIsBeingDragged || action == MotionEvent.ACTION_DOWN;
+//        return mIsBeingDragged || action == MotionEvent.ACTION_DOWN;
     }
 
     @Override
@@ -1787,5 +1799,14 @@ public class SwipeLayout extends FrameLayout {
             }
             return true;
         }
+    }
+
+    public static void setForceInterceptTouchEvent(boolean isIntercept){
+        mForceIntercept = isIntercept;
+        mForceInterceptAble = true;
+    }
+
+    public static void setForceAbleInterceptTouchEvent(boolean isAble){
+        mForceInterceptAble = isAble;
     }
 }
