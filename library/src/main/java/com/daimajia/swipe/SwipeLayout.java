@@ -334,16 +334,13 @@ public class SwipeLayout extends FrameLayout {
             return mForceIntercept;
         }
         if (!isSwipeEnabled()) {
-            Log.d("onInterceptTouchEvent", this+":isSwipeEnabled:"+false);
             return false;
         }
         if (mClickToClose && getOpenStatus() == Status.Open && isTouchOnSurface(ev)) {
-            Log.d("onInterceptTouchEvent", this+":Open:"+true);
             return true;
         }
         for (SwipeDenier denier : mSwipeDeniers) {
             if (denier != null && denier.shouldDenySwipe(ev)) {
-                Log.d("onInterceptTouchEvent", this+":shouldDenySwipe:"+false);
                 return false;
             }
         }
@@ -370,7 +367,6 @@ public class SwipeLayout extends FrameLayout {
                 if (!beforeCheck && mIsBeingDragged) {
                     //let children has one chance to catch the touch, and request the swipe not intercept
                     //useful when swipeLayout wrap a swipeLayout or other gestural layout
-                    Log.d("onInterceptTouchEvent", this+":ACTION_MOVE:"+false);
                     return false;
                 }
                 break;
@@ -383,9 +379,7 @@ public class SwipeLayout extends FrameLayout {
             default://handle other action, such as ACTION_POINTER_DOWN/UP
                 mDragHelper.processTouchEvent(ev);
         }
-        Log.d("onInterceptTouchEvent", this+":MotionEvent:"+mIsBeingDragged);
         return mIsBeingDragged;
-//        return false;
     }
 
     @Override
@@ -499,7 +493,6 @@ public class SwipeLayout extends FrameLayout {
             default://handle other action, such as ACTION_POINTER_DOWN/UP
                 mDragHelper.processTouchEvent(event);
         }
-        Log.d("onInterceptTouchEvent", this+":onTouchEvent:"+mIsBeingDragged);
         return super.onTouchEvent(event) || mIsBeingDragged || action == MotionEvent.ACTION_DOWN;
 //        return mIsBeingDragged || action == MotionEvent.ACTION_DOWN;
     }
@@ -1371,7 +1364,6 @@ public class SwipeLayout extends FrameLayout {
             bottomViewRect = computeBottomLayoutAreaViaSurface(ShowMode.PullOut, surfaceRect);
         }
         if (currentBottomView != null) {
-            Log.d("layoutPullOut", "layoutPullOut: "+bottomViewRect.left);
             currentBottomView.layout(bottomViewRect.left, bottomViewRect.top, bottomViewRect.right, bottomViewRect.bottom);
         }
     }
@@ -1688,7 +1680,6 @@ public class SwipeLayout extends FrameLayout {
 
     /** 更新底部View的布局 */
     private void updateBottomViews() {
-        Log.d("layoutPullOut", "updateBottomViews");
         View currentBottomView = getCurrentBottomView();
         //获取可滑动的范围
         if (currentBottomView != null) {

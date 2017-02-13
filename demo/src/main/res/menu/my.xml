@@ -26,7 +26,8 @@
             android:title="InterceptFalse"/>
         <item
             android:id="@+id/action_intercept_normal"
-            android:title="InterceptNormal"/>
+            android:title="InterceptNormal"
+            android:checked="true"/>
     </group>
 
 </menu>
